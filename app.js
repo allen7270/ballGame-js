@@ -7,8 +7,29 @@ let circle_y = 60;
 let radius = 20;
 let xSpeed = 20;
 let ySpeed = 20;
+let ground_x = 100;
+let ground_y = 500;
+let ground_height = 5;
+
+c.addEventListener("mousemove", (e) => {
+  ground_x = e.clientX;
+});
 
 function drawCircle() {
+  if (
+    circle_x >= ground_x - radius &&
+    circle_x <= ground_x + 200 + radius &&
+    circle_y >= ground_y - radius &&
+    circle_y <= ground_y + radius
+  ) {
+    if (ySpeed > 0) {
+      circle_y -= 40;
+    } else {
+      circle_y += 40;
+    }
+    ySpeed *= -1;
+  }
+
   if (circle_x >= canvasWidth - radius) {
     xSpeed *= -1;
   }
@@ -27,6 +48,9 @@ function drawCircle() {
 
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+  ctx.fillStyle = "orange";
+  ctx.fillRect(ground_x, ground_y, 200, ground_height);
 
   // (x, y, radius, startAngle, endAngle)
   ctx.beginPath();
