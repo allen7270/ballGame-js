@@ -11,6 +11,7 @@ let ground_x = 100;
 let ground_y = 500;
 let ground_height = 5;
 let brickArray = [];
+let count = 0;
 
 function getRandomArbitrary(min, max) {
   return min + Math.floor(Math.random() * (max - min));
@@ -23,6 +24,7 @@ class Brick {
     this.width = 50;
     this.height = 50;
     brickArray.push(this);
+    this.visible = true;
   }
 
   drawBrick() {
@@ -51,7 +53,9 @@ c.addEventListener("mousemove", (e) => {
 function drawCircle() {
   // 確認是否打到磚塊
   brickArray.forEach((brick, index) => {
-    if (brick.touchingBall(circle_x, circle_y)) {
+    if (brick.visible && brick.touchingBall(circle_x, circle_y)) {
+      count++;
+      brick.visible = false;
       // 從下方撞擊
       if (circle_y >= brick.y + brick.height) {
         ySpeed *= -1;
@@ -68,8 +72,8 @@ function drawCircle() {
       else if (circle_x >= brick.x + brick.width) {
         xSpeed *= -1;
       }
-      brickArray.splice(index, 1);
-      if (brickArray.length == 0) {
+
+      if (count == 10) {
         alert("遊戲結束");
         clearInterval(game);
       }
@@ -108,8 +112,11 @@ function drawCircle() {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
+  // 畫出所有brick
   brickArray.forEach((brick) => {
-    brick.drawBrick();
+    if (brick.visible) {
+      brick.drawBrick();
+    }
   });
 
   ctx.fillStyle = "orange";
